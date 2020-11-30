@@ -49,7 +49,7 @@ def mapJoints(sheetName, filePath):
         elif panNameLong in bottomPans:
             bottomJoints.append(jtName)
         else:
-            print("error in divididing Joints")
+            print("error in dividing Joint " + str(jtName))
             
             
     """Create x y z coordinate arrays for top/left side"""
