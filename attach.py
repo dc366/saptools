@@ -94,7 +94,9 @@ def add_joints_to_group(groupname, joints):
     assign joints in list joints to group groupname. Creates group groupname if it does not exist
     """
     
-    SapModel.GroupDef.SetGroup_1(groupname)
+    SapModel.GroupDef.SetGroup(groupname)
+    #for ETABS
+    #SapModel.GroupDef.SetGroup_1(groupname)
     
     for j in joints:
         SapModel.PointObj.SetGroupAssign(str(j),groupname)
