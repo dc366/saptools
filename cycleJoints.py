@@ -1,7 +1,7 @@
 import pandas as pd
 import panelJoints
 """Inputs: (sheetName must start with H or V)"""
-filePath=r"C:\Users\ACP\Desktop\pythonPoints.xlsx"
+filePath=r"PythonPoints.xlsx"
 df = pd.read_excel(filePath, sheet_name="Input") # can also index sheet by name or fetch all sheets
 dirtylist = df["jLine"].tolist()
 
