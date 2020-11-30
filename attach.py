@@ -94,12 +94,19 @@ def add_joints_to_group(groupname, joints):
     assign joints in list joints to group groupname. Creates group groupname if it does not exist
     """
     
-    SapModel.GroupDef.SetGroup(groupname)
+    ret = SapModel.GroupDef.SetGroup(groupname)
     #for ETABS
-    #SapModel.GroupDef.SetGroup_1(groupname)
+    #ret = SapModel.GroupDef.SetGroup_1(groupname)
+    if ret != 0:
+        print ("error!")
     
     for j in joints:
-        SapModel.PointObj.SetGroupAssign(str(j),groupname)
+        ret = SapModel.PointObj.SetGroupAssign(str(j),groupname)
+        
+        if ret != 0:
+            print ("error!")
+        
+
 
 def get_list_excel(filepath,sheetname,header):
     """
