@@ -31,12 +31,15 @@ def closeSapModel():
 class sapGroup:
     """
     sapGroup contains the elements in groupName. Initialize using sapGroup(groupName)
-
+    
+    sapGroup.groupName contains the name of the group
     sapGroup.numberItems tells the number of elements
     sapGroup.TypeID contains the type of each element (list) 
         (1 = joint, 2 = frame, 3 = cable, 4 = tendon, 5 = area, 6 = solid, 7 = link)
     sapGroup.ObjectName tells the name of each element (list)
     sapGroup.sapElements is a list of all the element objects
+    
+    sapGroup.select() selects the group in SAP
     """
     
     def __init__(self, groupName):
@@ -46,6 +49,7 @@ class sapGroup:
         if ret != 0:
             print ("error!")
         
+        self.groupName = groupName
         self.sapElements = []
         
         for i in range(self.numberItems):
@@ -57,6 +61,10 @@ class sapGroup:
             else:
                 self.sapElements.append()
             
+        #add a select() method to select this group in SAP
+    def select(self):
+        global SapModel
+        SapModel.SelectObj.Group(self.groupName)
 
 class sapGroupList:
     """
