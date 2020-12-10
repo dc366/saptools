@@ -114,7 +114,22 @@ def add_joints_to_group(groupname, joints):
         if ret != 0:
             print ("error!")
         
-
+def add_areas_to_group(groupname, areas):
+    """
+    assign joints in list joints to group groupname. Creates group groupname if it does not exist
+    """
+    
+    ret = SapModel.GroupDef.SetGroup(groupname)
+    #for ETABS
+    #ret = SapModel.GroupDef.SetGroup_1(groupname)
+    if ret != 0:
+        print ("error!")
+    
+    for j in areas:
+        ret = SapModel.AreaObj.SetGroupAssign(str(j),groupname)
+        
+        if ret != 0:
+            print ("error!")
 
 def get_list_excel(filepath,sheetname,header):
     """
