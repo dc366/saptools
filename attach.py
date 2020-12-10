@@ -40,6 +40,7 @@ class sapGroup:
     sapGroup.sapElements is a list of all the element objects
     
     sapGroup.select() selects the group in SAP
+    
     """
     
     def __init__(self, groupName):
@@ -60,8 +61,7 @@ class sapGroup:
                 self.sapElements.append(sapJoint(self.ObjectName[i]))
             else:
                 self.sapElements.append()
-            
-        #add a select() method to select this group in SAP
+
     def select(self):
         global SapModel
         SapModel.SelectObj.Group(self.groupName)
