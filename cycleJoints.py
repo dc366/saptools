@@ -16,15 +16,16 @@ col5=[]
 
 for i in range(len(lineList)):
     sheetName=lineList[i]
-    [a,b,c,d,e]= panelJoints.mapJoints(sheetName, filePath)
+    [a,b,c,d,e,f]= panelJoints.mapJoints(sheetName, filePath)
     col1.extend(a)
     col2.extend(b)
     col3.extend(c)
     col4.extend(d)
     col5.extend(e)
+    col6.extend(f)
 
 
-tempList = [col1, col2, col3, col4, col5]
+tempList = [col1, col2, col3, col4, col5, col6]
 combinedList= zip(*tempList)
 df = pd.DataFrame(combinedList)
 writer = pd.ExcelWriter('Output.xlsx', engine='xlsxwriter')
