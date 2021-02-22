@@ -158,10 +158,13 @@ def mapJoints(sheetName, filePath):
         for i in range(listLength-1):
             thirdPointsFinal[i] = topJointsFinal[i+1]
         thirdPointsFinal[listLength-1] = topJointsFinal[listLength-2]
+        typeFinal=["Horiz"]*listLength
+        
     elif sheetName[0] == "V":
         for i in range(listLength-1):
             thirdPointsFinal[i+1] = topJointsFinal[i]
         thirdPointsFinal[0] = topJointsFinal[1]
+        typeFinal=["Vert"]*listLength
         
     
     """side and dir list generations"""
@@ -183,6 +186,6 @@ def mapJoints(sheetName, filePath):
             dirFinal[i]= dirList[index]
             
     
-    return  [topJointsFinal, bottomJointsFinal, thirdPointsFinal, sideFinal, dirFinal]
+    return  [topJointsFinal, bottomJointsFinal, thirdPointsFinal, sideFinal, typeFinal, dirFinal]
 
     
