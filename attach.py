@@ -59,6 +59,8 @@ class sapGroup:
             
             if(current_typeID==1):
                 self.sapElements.append(sapJoint(self.ObjectName[i]))
+            if(current_typeID==5):
+                self.sapElements.append(sapArea(self.ObjectName[i]))
             else:
                 self.sapElements.append()
 
@@ -69,7 +71,6 @@ class sapGroup:
 class sapGroupList:
     """
     sapGroupList contains the all the group names in the SAP model. Initialize using sapGroupList()
-
     sapGroupList.numberItems tells the number of groups
     sapGroupList.groupNames contains the list of group names
     """
@@ -83,7 +84,6 @@ class sapGroupList:
 class sapJoint:
     """
     sapJoint contains the coordinates of a joint. Initialize using sapJoint(jointID)
-
     sapJoint.jointID tells the name of the joint
     sapJoint.x contains the x coordinate
     sapJoint.y contains the y coordinate
@@ -96,7 +96,17 @@ class sapJoint:
         
         if ret != 0:
             print ("error!")
+class sapArea:
+    """
+    sapJoint contains the name of an area. Initialize using sapJoint(areaID)
 
+    sapJoint.areaID tells the name of the area
+
+    """
+    def __init__(self,areaID):
+        global SapModel
+        self.areaID = areaID
+        
 def add_joints_to_group(groupname, joints):
     """
     assign joints in list joints to group groupname. Creates group groupname if it does not exist
@@ -133,7 +143,6 @@ def add_areas_to_group(groupname, areas):
 
 def get_list_excel(filepath,sheetname,header):
     """
-
     Parameters
     ----------
     filepath : str
@@ -142,12 +151,10 @@ def get_list_excel(filepath,sheetname,header):
         Name of worksheet to read
     header : str
         Name of first cell in column to read. All values should be strings
-
     Returns
     -------
     cleanedlist : str list
         a list of all items in the column chosen
-
     """
     
     df = pd.read_excel(filepath, sheet_name=sheetname) # can also index sheet by name or fetch all sheets
@@ -160,12 +167,10 @@ def get_list_excel(filepath,sheetname,header):
 def get_list_sap():
     """
     
-
     Returns
     -------
     selectedjoints : str list
         A list of all selected joints in the currently attached SAP instance
-
     """
     
     selectedobjs = SapModel.SelectObj.GetSelected()

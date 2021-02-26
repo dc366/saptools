@@ -1,7 +1,7 @@
 import pandas as pd
 import panelJoints
 """Inputs: (sheetName must start with H or V)"""
-filePath=r"PythonPoints.xlsx"
+filePath=r"C:\Users\ACP\Desktop\Python Stuff\jtMapBEastRevisit12.15.xlsx"
 df = pd.read_excel(filePath, sheet_name="Input") # can also index sheet by name or fetch all sheets
 dirtylist = df["jLine"].tolist()
 
@@ -13,9 +13,11 @@ col2=[]
 col3=[]
 col4=[]
 col5=[]
+col6=[]
 
 for i in range(len(lineList)):
     sheetName=lineList[i]
+    print(sheetName)
     [a,b,c,d,e,f]= panelJoints.mapJoints(sheetName, filePath)
     col1.extend(a)
     col2.extend(b)
