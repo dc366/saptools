@@ -1,0 +1,4 @@
+compares first column of file1 and file2, prints rows of file2 which are not in file1
+ awk -F, 'FNR==NR {a[$1]=$0; next}; {if($1 in a == 0) {print $0}}' file1 file2 
+find files of given extension
+find . -name *.csv
