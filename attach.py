@@ -141,6 +141,24 @@ class sapApplication:
             
             if ret != 0:
                 print ("error!")
+    
+    def add_frames_to_group(self,groupname,frames):
+        """
+        assign frames in list frames to group groupname. Creates group groupname if it does not exist
+        """
+        
+        ret = self.SapModel.GroupDef.SetGroup(groupname)
+        #for ETABS
+        #ret = SapModel.GroupDef.SetGroup_1(groupname)
+        if ret != 0:
+            print ("error!")
+        
+        for j in frames:
+            ret = self.SapModel.FrameObj.SetGroupAssign(str(j),groupname)
+            
+            if ret != 0:
+                print ("error!")
+            
                 
 class sapGroup:
     """
@@ -175,6 +193,8 @@ class sapGroup:
             
             if(current_typeID==1):
                 self.sapElements.append(sapJoint(self.SapModel,self.ObjectName[i]))
+            elif(current_typeID==2):
+                self.sapElements.append(sapFrame(self.SapModel,self.ObjectName[i]))
             else:
                 self.sapElements.append()
 
@@ -216,6 +236,18 @@ class sapJoint:
         
         if ret != 0:
             print ("error!")
+
+class sapFrame:
+    """
+    sapJoint contains a frame element. Initialize using sapFrame(sapApplication_instance,ID)
+
+    sapJoint.ID tells the name of the frame
+    """
+    def __init__(self,sapApplication_instance,jointID):
+        
+        self.SapModel = sapApplication_instance.SapModel
+        
+        self.ID = ID
 
 
 def get_list_excel(filepath,sheetname,header):
