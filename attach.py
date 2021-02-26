@@ -195,7 +195,7 @@ class sapGroup:
                 self.sapElements.append(sapJoint(self.SapModel,self.ObjectName[i]))
                 
             elif(current_typeID==5):
-                self.sapElements.append(sapArea(self.ObjectName[i]))
+                self.sapElements.append(sapArea(self.SapModel, self.ObjectName[i]))
                 
             elif(current_typeID==2):
                 self.sapElements.append(sapFrame(self.SapModel,self.ObjectName[i]))
@@ -245,7 +245,7 @@ class sapJoint:
             print ("error!")
 class sapArea:
     """
-    sapJoint contains the name of an area. Initialize using sapJoint(areaID)
+    sapJoint contains the name of an area. Initialize using sapJoint(sapApplication_instance, areaID)
 
 
     sapJoint.areaID tells the name of the area
@@ -269,6 +269,10 @@ class sapFrame:
         self.SapModel = sapApplication_instance.SapModel
         
         self.ID = ID
+        
+        (iEnd, jEnd, ret) = self.SapModel.frameObj.GetPoints(ID)
+        self.iEnd = iEnd
+        self.jEnd = jEnd
 
 
 def get_list_excel(filepath,sheetname,header):
@@ -293,5 +297,6 @@ def get_list_excel(filepath,sheetname,header):
     cleanedlist = [x for x in dirtylist if (pd.isnull(x) == False)]
     
     return cleanedlist
+
 
 
