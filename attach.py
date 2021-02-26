@@ -193,8 +193,14 @@ class sapGroup:
             
             if(current_typeID==1):
                 self.sapElements.append(sapJoint(self.SapModel,self.ObjectName[i]))
+                
+            elif(current_typeID==5):
+                self.sapElements.append(sapArea(self.ObjectName[i]))
+                
             elif(current_typeID==2):
                 self.sapElements.append(sapFrame(self.SapModel,self.ObjectName[i]))
+                
+                
             else:
                 self.sapElements.append()
 
@@ -220,6 +226,7 @@ class sapGroupList:
             
 class sapJoint:
     """
+
     sapJoint contains the coordinates of a joint. Initialize using sapJoint(sapApplication_instance,jointID)
 
     sapJoint.jointID tells the name of the joint
@@ -236,14 +243,28 @@ class sapJoint:
         
         if ret != 0:
             print ("error!")
+class sapArea:
+    """
+    sapJoint contains the name of an area. Initialize using sapJoint(areaID)
 
+
+    sapJoint.areaID tells the name of the area
+
+    """
+    def __init__(self, sapApplication_instance, areaID):
+        self.SapModel = sapApplication_instance.SapModel
+        self.areaID = areaID
+        
+
+    
 class sapFrame:
+
     """
     sapJoint contains a frame element. Initialize using sapFrame(sapApplication_instance,ID)
 
     sapJoint.ID tells the name of the frame
     """
-    def __init__(self,sapApplication_instance,jointID):
+    def __init__(self,sapApplication_instance,ID):
         
         self.SapModel = sapApplication_instance.SapModel
         
@@ -252,7 +273,6 @@ class sapFrame:
 
 def get_list_excel(filepath,sheetname,header):
     """
-
     Parameters
     ----------
     filepath : str
@@ -261,12 +281,10 @@ def get_list_excel(filepath,sheetname,header):
         Name of worksheet to read
     header : str
         Name of first cell in column to read. All values should be strings
-
     Returns
     -------
     cleanedlist : str list
         a list of all items in the column chosen
-
     """
     
     df = pd.read_excel(filepath, sheet_name=sheetname) # can also index sheet by name or fetch all sheets

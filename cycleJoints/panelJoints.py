@@ -1,6 +1,7 @@
 def mapJoints(sheetName, filePath):  
     import pandas as pd
     import attach
+    sapBox = attach.sapApplication()
     
     
     """Inputs: (sheetName must start with H or V)"""
@@ -27,7 +28,7 @@ def mapJoints(sheetName, filePath):
     
     
     """Get Group Objects from SAP"""
-    jtGroup = attach.sapGroup(sheetName)
+    jtGroup = attach.sapGroup(sapBox,sheetName)
     jtList = jtGroup.ObjectName
     
     
@@ -49,7 +50,7 @@ def mapJoints(sheetName, filePath):
         elif panNameLong in bottomPans:
             bottomJoints.append(jtName)
         else:
-            print("error in dividing Joint " + str(jtName))
+            print("error in divididing Joints")
             
             
     """Create x y z coordinate arrays for top/left side"""
@@ -57,7 +58,7 @@ def mapJoints(sheetName, filePath):
     yValTop=[]
     zValTop=[]
     for i in range(len(topJoints)):
-        coord=attach.sapJoint(topJoints[i])
+        coord=attach.sapJoint(sapBox, topJoints[i])
         xValTop.append(coord.x)
         yValTop.append(coord.y)
         zValTop.append(coord.z)
@@ -100,7 +101,7 @@ def mapJoints(sheetName, filePath):
     yValBottom=[]
     zValBottom=[]
     for i in range(len(bottomJoints)):
-        coord=attach.sapJoint(bottomJoints[i])
+        coord=attach.sapJoint(sapBox, bottomJoints[i])
         xValBottom.append(coord.x)
         yValBottom.append(coord.y)
         zValBottom.append(coord.z)
@@ -171,10 +172,11 @@ def mapJoints(sheetName, filePath):
         
     sideFinal=[0]*listLength
     dirFinal=[0]*listLength
-                
+          
     for i in range(listLength):
         panName=topJointsFinal[i][0:6]
         panNameLong=topJointsFinal[i][0:7]
+        
      
         if panName in topPans:
             index = topPans.index(panName)
