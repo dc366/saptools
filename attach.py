@@ -192,13 +192,13 @@ class sapGroup:
             current_typeID = self.TypeID[i]
             
             if(current_typeID==1):
-                self.sapElements.append(sapJoint(self.SapModel,self.ObjectName[i]))
+                self.sapElements.append(sapJoint(sapApplication_instance,self.ObjectName[i]))
                 
             elif(current_typeID==5):
-                self.sapElements.append(sapArea(self.ObjectName[i]))
+                self.sapElements.append(sapArea(sapApplication_instance, self.ObjectName[i]))
                 
             elif(current_typeID==2):
-                self.sapElements.append(sapFrame(self.SapModel,self.ObjectName[i]))
+                self.sapElements.append(sapFrame(sapApplication_instance,self.ObjectName[i]))
                 
                 
             else:
@@ -245,14 +245,16 @@ class sapJoint:
             print ("error!")
 class sapArea:
     """
-    sapJoint contains the name of an area. Initialize using sapJoint(areaID)
+    sapJoint contains the name of an area. Initialize using sapJoint(sapApplication_instance, areaID)
 
 
     sapJoint.areaID tells the name of the area
 
     """
     def __init__(self, sapApplication_instance, areaID):
+        
         self.SapModel = sapApplication_instance.SapModel
+        
         self.areaID = areaID
         
 
@@ -260,15 +262,23 @@ class sapArea:
 class sapFrame:
 
     """
-    sapJoint contains a frame element. Initialize using sapFrame(sapApplication_instance,ID)
+    sapFrame contains a frame element. Initialize using sapFrame(sapApplication_instance,ID)
 
-    sapJoint.ID tells the name of the frame
+    sapFrame.ID tells the name of the frame
+    sapFrame.iEnd tells the point Object name of the i End
+    sapFrame.iEnd tells the point Object name of the j End
     """
     def __init__(self,sapApplication_instance,ID):
         
         self.SapModel = sapApplication_instance.SapModel
         
         self.ID = ID
+        
+        (iEnd, jEnd, ret) = self.SapModel.frameObj.GetPoints(ID)
+        self.iEnd = iEnd
+        self.jEnd = jEnd
+        if ret !=0:
+            print ("error!")
 
 
 def get_list_excel(filepath,sheetname,header):
@@ -293,5 +303,6 @@ def get_list_excel(filepath,sheetname,header):
     cleanedlist = [x for x in dirtylist if (pd.isnull(x) == False)]
     
     return cleanedlist
+
 
 
