@@ -24,3 +24,6 @@ for i in range(len(grandAreaObjects)):
 
 sapBox.add_areas_to_group("flangeAreas",flangeAreas)
 sapBox.add_areas_to_group("panelAreas",panelAreas)
+
+sapBox.SelectObj.ClearSelection
+sapBox.SelectObj.Group("panelAreas")

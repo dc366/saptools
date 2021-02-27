@@ -158,6 +158,14 @@ class sapApplication:
             
             if ret != 0:
                 print ("error!")
+    def select_group(self, groupname):
+        ret = self.SapModel.SelectObj.Group(groupname)
+        if ret != 0:
+            print("error!")
+    def clear_selection(self):
+        ret = self.SapModel.SelectObj.ClearSelection()
+        if ret != 0:
+            print("error!")
             
                 
 class sapGroup:
