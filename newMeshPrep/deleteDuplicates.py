@@ -4,11 +4,13 @@ Created on Fri Feb 26 13:44:28 2021
 @author: ACP
 """
 ###################For deleting Duplicate Frame Elements##################
+#This script creates groups for the frame objects in group "frameList"
+#This script only works for a max of 1 duplicate in the same location, it doesn't work if there are 2 or more duplicates
 
 import attach
 sapBox = attach.sapApplication()
 
-frameGroupName = "frameList"   #put your suspected duplicates in this group
+frameGroupName = "frameList"   #create this group in SAP and put your suspected duplicates in this group
 
 #Other Parameters:
 frameObjects = attach.sapGroup(sapBox, frameGroupName).ObjectName
@@ -33,7 +35,7 @@ for i in range(len(frameObjects)):
         if i != k:
             if ((iEnds[i]==iEnds[k]) or (iEnds[i]== jEnds[k])):
                 if ((jEnds[i]==jEnds[k]) or (jEnds[i]== iEnds[k])):
-                    if frameObjects[i] not in dupListB:
+                    if frameObjects[i] not in dupListB: #if the next point is not already in list B:
                         dupListA.append(frameObjects[i])
                         dupListB.append(frameObjects[k])
                         
