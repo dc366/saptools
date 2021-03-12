@@ -1,25 +1,26 @@
 #This script for use with standardized excel spreadsheet "pythonMappingInputV2.xlsx"
 import attach
 import time
+sapBox = attach.sapApplication()
 
 start_time = time.time() #track time taken to run
 """Please input filepath of pythong input spreadsheet:"""
-filePath = r"C:\Users\ACP\Desktop\Python Stuff\B_East_Test_H1.xlsx"
+filePath = r"J:\ENG\1092 LMNA LA\Facade & FRP Analysis Work\ACP\Panel Point Generatior\seq C1 SW\2021_03_01_C1SW_Mapping.xlsx"
 
 """Please input Group Name from SAP"""
 grandJointGroup = "panelEdgePoints"
 
 #Other Parameters:
 jtLineNames = attach.get_list_excel(filePath, "Input", "jLine") 
-grandGroupObjects = attach.sapGroup(grandJointGroup).ObjectName
+grandGroupObjects = attach.sapGroup(sapBox, grandJointGroup).ObjectName
 
 # Separate Horizontal and Vertical Edge Joints into Separate Lists APPROX 63 SECONDS ON ENG 31D:
 ACjoints = []
 for i in range(len(grandGroupObjects)):
     jtName = grandGroupObjects[i]
-    if jtName[7]=="A" or jtName[8]=="A":
+    if "-A-" in jtName:
         ACjoints.append(jtName)
-    if jtName[7]=="C" or jtName[8]=="C":
+    if "-C-" in jtName:
         ACjoints.append(jtName)
         
 elapsed_time = time.time() - start_time
@@ -48,7 +49,7 @@ for i in range(len(jtLineNames)):
                 HGroupList.append(jtName)
             if jtName[0:8] in botJtRoots or jtName[0:9] in botJtRoots:
                 HGroupList.append(jtName)
-        attach.add_joints_to_group(tabName,HGroupList)
+        sapBox.add_joints_to_group(tabName,HGroupList)
         
 elapsed_time2 = time.time() - start_time2
 print("time taken per Joint Line: ")

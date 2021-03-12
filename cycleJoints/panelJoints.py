@@ -50,7 +50,7 @@ def mapJoints(sheetName, filePath):
         elif panNameLong in bottomPans:
             bottomJoints.append(jtName)
         else:
-            print("error in divididing Joints")
+            print(jtName + "does not match excel sheet")
             
             
     """Create x y z coordinate arrays for top/left side"""
