@@ -13,17 +13,21 @@ from tqdm import tqdm
 import attach
 sapBox = attach.sapApplication()
 
-changeASEC1 = 'Layered-Shell-Coat-Scaled'
-changeASEC2 = 'Layered-Shell-Coat-Scaled-Flanges'
-changeASEC3 = 'Layered-Shell-Coat-Scaled+PV'
-changeFSEC1 = '4.5" Trap Hat'
-changeFSEC2 = 'Z-shaped Stiffener'
-changeFSEC3 = '2.25" Trap Hat'
-changeFSEC4 = '0.5" Trap Hat'
-changeFSEC5 = 'gutterStiffenerV1'
+ASEC1 = 'Layered-Shell-Coat-Scaled'
+ASEC2 = 'Layered-Shell-Coat-Scaled-Flanges'
+ASEC3 = 'Layered-Shell-Coat-Scaled+PV'
+FSEC1 = '4.5" Trap Hat'
+FSEC2 = 'Z-shaped Stiffener'
+FSEC3 = '2.25" Trap Hat'
+FSEC4 = '0.5" Trap Hat'
+FSEC5 = 'gutterStiffenerV1'
 
 changeASECList = [changeASEC1, changeASEC2, changeASEC3]
 changeFSECList = [changeFSEC1, changeFSEC2,changeFSEC3, changeFSEC4, changeFSEC5]
+
+
+
+
 
 #Define the panel thickness to be used for stiffener offset
 panThick = 0.49

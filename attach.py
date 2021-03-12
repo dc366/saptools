@@ -4,6 +4,7 @@ import pandas as pd
 import os.path
 from itertools import compress
 from itertools import chain
+from tqdm import tqdm
 
 class sapApplication:
     def __init__(self,modelname=None,modelpath=None):

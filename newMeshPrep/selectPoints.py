@@ -10,6 +10,7 @@ Created on Mon Mar  1 09:41:24 2021
 
 import attach
 sapBox = attach.sapApplication()
+from tqdm import tqdm
 
 #Before running this script, create a group called "allJoints" and assign the joints or subgroup of joints that contain the TP Joints
 jointGroup = "allJoints"
@@ -18,9 +19,9 @@ jointGroup = "allJoints"
 jointList = attach.sapGroup(sapBox, jointGroup).ObjectName
 
 tpJoints=[]
-for i in range(len(jointList)):
+for i in tqdm(range(len(jointList))):
     jointName= jointList[i]
     if ("TP" in jointName):  #"TP" are the Joints at T-pin ends in Rick's naming convention
         tpJoints.append(jointName)
-        
+print("creating TP group")
 sapBox.add_joints_to_group("tpJoints",tpJoints)

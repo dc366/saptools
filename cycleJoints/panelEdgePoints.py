@@ -1,27 +1,32 @@
 #This script for create SAP group "panelEdgePoints"
 import attach
+sapBox = attach.sapApplication()
 
 """Please input group Name:"""
-grandJointGroup = "typeHERE"
+grandJointGroup = "allPanelJoints"
 
 #Other Parameters:
-grandGroupObjects = attach.sapGroup(grandJointGroup).ObjectName
+grandGroupObjects = attach.sapGroup(sapBox, grandJointGroup).ObjectName
 
 # Generates List of panel edge points:
     
 panelEdgePoints = []
 for i in range(len(grandGroupObjects)):
     jtName = grandGroupObjects[i]
-    if jtName[8]=="A" or jtName[9]=="A":
+    if "-A-" in jtName:
         panelEdgePoints.append(jtName)
-    if jtName[8]=="B" or jtName[9]=="B":
+    if "-B-" in jtName:
         panelEdgePoints.append(jtName)
-    if jtName[8]=="C" or jtName[9]=="C":
+    if "-C-" in jtName:
         panelEdgePoints.append(jtName)
-    if jtName[8]=="D" or jtName[9]=="D":
+    if "-D-" in jtName:
         panelEdgePoints.append(jtName)   
+    if "-E-" in jtName:
+        panelEdgePoints.append(jtName)
+    if "-V-" in jtName:
+        panelEdgePoints.append(jtName)
 
 # Creates group in SAP:
     
-attach.add_joints_to_group("panelEdgePoints", panelEdgePoints)
+sapBox.add_joints_to_group("panelEdgePoints", panelEdgePoints)
 
