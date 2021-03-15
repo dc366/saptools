@@ -3,20 +3,17 @@ import comtypes.client
 import pandas as pd
 import os.path
 from itertools import compress
-from itertools import chain
 from tqdm import tqdm
 
 class sapApplication:
     def __init__(self,modelname=None,modelpath=None):
+        
         if (modelname and modelpath):
-            self.SapObject = sapApplication.startSap(modelname,modelpath)
-            self.SapModel = self.SapObject.SapModel
+            self.startSap(modelname,modelpath)
         else:
-            self.SapObject = sapApplication.attachSap()
-            self.SapModel = self.SapObject.SapModel
+            self.attachSap()
 
-    @staticmethod
-    def attachSap():
+    def attachSap(self):
         try:
             #get the active SapObject
             
@@ -30,11 +27,12 @@ class sapApplication:
         
             sys.exit(-1)
         
+        self.SapObject = mySapObject
+        self.SapModel = mySapObject.SapModel
         
-        return mySapObject
+        return
     
-    @staticmethod
-    def startSap(modelname,modelfolder):        
+    def startSap(self,modelname,modelfolder):        
         
         #full path to the model
         #set it to the desired path of your model
@@ -68,7 +66,10 @@ class sapApplication:
         mySapObject.ApplicationStart()
         mySapObject.SapModel.File.OpenFile(ModelPath)
         
-        return mySapObject
+        self.SapObject = mySapObject
+        self.SapModel = mySapObject.SapModel
+        
+        return
 
     def closeSapModel(self):
         print (self.SapObject.ApplicationExit(False))
