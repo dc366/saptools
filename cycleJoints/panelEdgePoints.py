@@ -1,17 +1,19 @@
 #This script for create SAP group "panelEdgePoints"
 import attach
 sapBox = attach.sapApplication()
+from tqdm import tqdm
 
 """Please input group Name:"""
 grandJointGroup = "allPanelJoints"
 
 #Other Parameters:
+print("Getting allPanelJoints, Please wait...")
 grandGroupObjects = attach.sapGroup(sapBox, grandJointGroup).ObjectName
 
 # Generates List of panel edge points:
     
 panelEdgePoints = []
-for i in range(len(grandGroupObjects)):
+for i in tqdm(range(len(grandGroupObjects))):
     jtName = grandGroupObjects[i]
     if "-A-" in jtName:
         panelEdgePoints.append(jtName)
