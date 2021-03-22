@@ -28,6 +28,7 @@ def mapJoints(sheetName, filePath):
     
     
     """Get Group Objects from SAP"""
+    print("Working on Mapping for "+str(sheetName))
     jtGroup = attach.sapGroup(sapBox,sheetName)
     jtList = jtGroup.ObjectName
     

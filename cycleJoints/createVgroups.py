@@ -1,11 +1,9 @@
 #This script for use with standardized excel spreadsheet "pythonMappingInputV2.xlsx"
 import attach
-import time
 sapBox = attach.sapApplication()
 
-start_time = time.time() #track time taken to run
 """Please input filepath of pythong input spreadsheet:"""
-filePath = r"J:\ENG\1092 LMNA LA\Facade & FRP Analysis Work\ACP\Panel Point Generatior\seq C1 SW\2021_03_01_C1SW_Mapping.xlsx"
+filePath = r"J:\ENG\1092 LMNA LA\Facade & FRP Analysis Work\ACP\Panel Point Generatior\Seq C1 SE Redo\2021_03_16_C1SERedo_Mapping.xlsx"
 
 """Please input Group Name from SAP"""
 grandJointGroup = "panelEdgePoints"
@@ -13,52 +11,59 @@ grandJointGroup = "panelEdgePoints"
 
 #Other Parameters:
 jtLineNames = attach.get_list_excel(filePath, "Input", "jLine") 
+print("Getting Joint Names from SAP, Please Wait...")
 grandGroupObjects = attach.sapGroup(sapBox, grandJointGroup).ObjectName
 
 # Separate Vertical Edge Joints into Separate Lists APPROX 63 SECONDS ON ENG 31D:
 BDjoints = []
 ACjoints = []
+
 for i in range(len(grandGroupObjects)):
     jtName = grandGroupObjects[i]
-    if jtName[7]=="B" or jtName[8]=="B":
+    if ("-B-" in jtName) or ("-D-" in jtName) or ("-E-" in jtName):
         BDjoints.append(jtName)
-    if jtName[7]=="D" or jtName[8]=="D":
-        BDjoints.append(jtName)
-    if jtName[7]=="A" or jtName[8]=="A":
+    if ("-A-" in jtName) or ("-C-" in jtName):
         ACjoints.append(jtName)
-    if jtName[7]=="C" or jtName[8]=="C":
-        ACjoints.append(jtName)
-        
-elapsed_time = time.time() - start_time
-print("time taken for setup: ")
-print(elapsed_time)
-start_time2 = time.time() #track time taken to run
 
 # This creates the SAP groups for the Vertical Joint Lines for use with "panelJoints.py" and "cycleJoints.py"
 # APPROX 30 SECONDS PER JOINT LINE ON ENG 31D
 for i in range(len(jtLineNames)):
     tabName = jtLineNames[i]
-    VGroupList = []
-    topJtRoots = []
-    botJtRoots = []
+    VGroupListLeft = []
+    VGroupListRight = []
+    print("For Joint Line "+str(tabName)+":")
+
     if tabName[0]=="V":
         topPans = attach.get_list_excel(filePath, tabName,"top") #("filepath", "tab", "column header")
         botPans = attach.get_list_excel(filePath, tabName,"bottom") 
         topLetters = attach.get_list_excel(filePath, tabName,"top letter")
         botLetters = attach.get_list_excel(filePath, tabName,"bot letter")
         
-        
+        counter = [0]*len(topPans)
+        print("Finding Left Side Points...")
         for k in range(len(topPans)):  #Cycle through list of top/left panels
-            topJtRoots.append(topPans[k] + "-" + topLetters[k])  #creating list of point root names e.f. "C13-02-B"
 
+            currentRoot = topPans[k] + "-" + topLetters[k]
+
+        ##############  Adds Side (B and D) Points ###########################
             
+            for j in range(len(BDjoints)):
+                jtName = BDjoints[j]
+                if currentRoot in jtName:
+                    VGroupListLeft.append(jtName)
+                    counter[k] = counter[k] + 1
+            sapBox.add_joints_to_group(tabName,VGroupListLeft)
+        ######################################################################            
+            
+        print("Finding Left Side Corner Points...")    
+        for k in range(len(topPans)):    
             ##########  Adds Corner (A and C) Points  Please note, it assumes they are A and C Points  ###############
 
             cPt1Root = topPans[k]+"-A"
             cPt2Root = topPans[k]+"-C"
 
-            vPt1 = topPans[k]+"-" + topLetters[k]
-            vPt2 = vPt1
+            vPt1 = topPans[k]+"-" + topLetters[k] + "-1"
+            vPt2 = topPans[k]+"-" + topLetters[k] + "-" + str(counter[k])
        
             vPts = [vPt1, vPt2]
             
@@ -69,7 +74,7 @@ for i in range(len(jtLineNames)):
             
            
             for q in range(len(minDist)):
-                    vPtRef = vPts[q] + str(-4)
+                    vPtRef = vPts[q]
                     refX = attach.sapJoint(sapBox, vPtRef).x
                     refY = attach.sapJoint(sapBox, vPtRef).y
                     refZ = attach.sapJoint(sapBox, vPtRef).z
@@ -96,31 +101,34 @@ for i in range(len(jtLineNames)):
             
             ###########################################################
         
-        ##############  Adds Side (B and D) Points ###########################
-        for j in range(len(BDjoints)):
-            jtName = BDjoints[j]
-            if jtName[0:8] in topJtRoots or jtName[0:9] in topJtRoots:
-                VGroupList.append(jtName)
-        sapBox.add_joints_to_group(tabName,VGroupList)
-        ######################################################################
+
         
         
         
         
         
-        
+        counter = [0]* len(botPans)
+        print("Finding Right Side Points...")
         for k in range(len(botPans)):  #Cycle through list of top/left panels
   #creating list of point root names e.f. "C13-02-B"
-            botJtRoots.append(botPans[k] + "-" + botLetters[k])
+
+            currentRoot = botPans[k] + "-" + botLetters[k]
             
             ##########  Adds Corner (A and C) Points  Please note, it assumes they are A and C Points  ###############
+            for j in range(len(BDjoints)):
+                jtName = BDjoints[j]
 
-
+                if currentRoot in jtName:
+                    VGroupListRight.append(jtName)
+                    counter[k] = counter[k] + 1
+            sapBox.add_joints_to_group(tabName,VGroupListRight)
+        print("Finding Right Side Corner Points...")  
+        for k in range(len(botPans)):
             cPt3Root = botPans[k]+"-A"
             cPt4Root = botPans[k]+"-C"
 
-            vPt3 = botPans[k]+"-" + botLetters[k]
-            vPt4 = vPt3           
+            vPt3 = botPans[k]+"-" + botLetters[k] +"-1"
+            vPt4 = botPans[k]+"-" + botLetters[k] + "-" + str(counter[k])         
             vPts = [vPt3, vPt4]
             
             cPtRoots = [cPt3Root, cPt4Root]
@@ -130,7 +138,7 @@ for i in range(len(jtLineNames)):
             
            
             for q in range(len(minDist)):
-                    vPtRef = vPts[q] + str(-4)
+                    vPtRef = vPts[q]
                     refX = attach.sapJoint(sapBox, vPtRef).x
                     refY = attach.sapJoint(sapBox, vPtRef).y
                     refZ = attach.sapJoint(sapBox, vPtRef).z
@@ -158,21 +166,12 @@ for i in range(len(jtLineNames)):
             ###########################################################
         
         ##############  Adds Side (B and D) Points ###########################
-        for j in range(len(BDjoints)):
-            jtName = BDjoints[j]
 
-            if jtName[0:8] in botJtRoots or jtName[0:9] in botJtRoots:
-                VGroupList.append(jtName)
-        sapBox.add_joints_to_group(tabName,VGroupList)
         ######################################################################  
         
   
     
-  
-    
-elapsed_time2 = time.time() - start_time2
-print("time taken per Joint Line: ")
-print(elapsed_time2)  #track time taken to run
+
 
                             
                         
