@@ -24,7 +24,7 @@ for i in tqdm(range(len(grandGroupObjects))):
         ACjoints.append(jtName)
     if "-C-" in jtName:
         ACjoints.append(jtName)
-        
+
 
 # This creates the SAP groups for the Horizontal Joint Lines for use with "panelJoints.py" and "cycleJoints.py"
 
