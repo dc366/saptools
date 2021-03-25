@@ -10,7 +10,7 @@ Created on Fri Feb 26 13:44:28 2021
 import attach
 sapBox = attach.sapApplication()
 
-frameGroupName = "frameList"   #create this group in SAP and put your suspected duplicates in this group
+frameGroupName = "allFrames"   #create this group in SAP and put your suspected duplicates in this group
 
 #Other Parameters:
 frameObjects = attach.sapGroup(sapBox, frameGroupName).ObjectName

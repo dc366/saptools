@@ -13,9 +13,9 @@ origDistList=[]
 
 done = input('set Model units to inches, press enter when done')
 print("Please choose a reference point, try a lower left or right corner of the panel mesh model")
-xRef = input('type reference x coord in inches')
-yRef = input('type reference y coord in inches')
-zRef = input('type reference z coord in inches')
+xRef = float(input('type reference x coord in inches'))
+yRef = float(input('type reference y coord in inches'))
+zRef = float(input('type reference z coord in inches'))
 
 
 print("sorting areas:")
