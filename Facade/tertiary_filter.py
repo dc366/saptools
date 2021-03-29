@@ -75,8 +75,3 @@ a.add_frames_to_group('LERA_stiffeners',stiffener_members)
 a.SapModel.SelectObj.PropertyArea("WW")
 [ww_elems,_] = a.get_list_sap("area")
 a.add_areas_to_group('LERA_secondary',ww_elems)
-
-#assign reverseSW to secondary members
-a.SapModel.FrameObj.SetLoadGravity("LERA_secondary","reverseSW",X=0,Y=0,Z=1.0,Replace=True,ItemType=1)
-a.SapModel.AreaObj.SetLoadGravity("LERA_secondary","reverseSW",X=0,Y=0,Z=1.0,Replace=True,ItemType=1)
-print("Please verify LERA_secondary group to ensure that load is applied to correct members")
