@@ -15,10 +15,13 @@ a = attach.sapApplication()
 
 tertiary_substrings = ['_KH_','_PB_','_PH_','_BB_','spTert']
 tertiary_sections = ['CONN_rod','CONN_rod_1in']
+stiffener_substrings = ['-S-']
+stiffener_sections = ['0.5" Hat Stiffener','Z-shaped Stiffener','2.5" Trap Hat','4.5" Trap Hat']
 connSTIFF_sections = ['CONN_stiff']
 tertiary_members = set()
 secondary_members = set()
 connSTIFF_members = set()
+stiffener_members = set()
 
 #search all frames for tertiary substrings and move them to another group
 [_,frames,_] = a.SapModel.FrameObj.GetNameList()
@@ -30,6 +33,8 @@ frames_list = list(frames)
 for frame in frames:
     if any(sub in frame for sub in tertiary_substrings):
         tertiary_members.add(frame)
+    elif any(sub in frame for sub in stiffener_substrings):
+        stiffener_members.add(frame)
     else:
         secondary_members.add(frame)
 
@@ -52,14 +57,19 @@ for frame in secondary_members.copy():
     if frame_section in tertiary_sections:
         tertiary_members.add(frame)
         secondary_members.remove(frame)
+    elif frame_section in stiffener_sections:
+        stiffener_members.add(frame)
+        secondary_members.remove(frame)
     elif frame_section in connSTIFF_sections:
         connSTIFF_members.add(frame)
         secondary_members.remove(frame)
+
 
 #create 3 groups     
 a.add_frames_to_group('LERA_tertiary',tertiary_members)
 a.add_frames_to_group('LERA_secondary',secondary_members)
 a.add_frames_to_group('LERA_CONNstiff',connSTIFF_members)
+a.add_frames_to_group('LERA_stiffeners',stiffener_members)
 
 #add WW elements to secondary members group
 a.SapModel.SelectObj.PropertyArea("WW")
@@ -67,5 +77,6 @@ a.SapModel.SelectObj.PropertyArea("WW")
 a.add_areas_to_group('LERA_secondary',ww_elems)
 
 #assign reverseSW to secondary members
-a.SapModel.FrameObj.SetLoadGravity("LERA_secondary","reverseSW",X=0,Y=0,Z=-1.0,Replace=True,ItemType=1)
-a.SapModel.AreaObj.SetLoadGravity("LERA_secondary","reverseSW",X=0,Y=0,Z=-1.0,Replace=True,ItemType=1)
+a.SapModel.FrameObj.SetLoadGravity("LERA_secondary","reverseSW",X=0,Y=0,Z=1.0,Replace=True,ItemType=1)
+a.SapModel.AreaObj.SetLoadGravity("LERA_secondary","reverseSW",X=0,Y=0,Z=1.0,Replace=True,ItemType=1)
+print("Please verify LERA_secondary group to ensure that load is applied to correct members")
