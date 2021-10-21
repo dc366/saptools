@@ -10,7 +10,7 @@ sapBox = attach.sapApplication()
 from tqdm import tqdm
 
 #group names documented in an excel file:
-filePath = r"C:\Users\ACP\Desktop\2021_04_XX Seq C1 NE\2021_05_12-LERAMOD.xlsx"
+filePath = r"C:\Users\acp\Desktop\2021_08_26 Seq A East\2021_09_08-LERAMODS.xlsx"
 sheetName = "panelWeightSummary"
 
 groupNames= attach.get_list_excel(filePath, sheetName, "sapGroup") 

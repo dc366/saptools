@@ -31,6 +31,10 @@ for i in range(len(groupNames)):
             ret = sapBox.SapModel.AreaObj.SetGroupAssign(objectNm, groupNm)
             if ret != 0:
                 print("error in "+objectNm)
+        elif objectType  == 7:
+            ret = sapBox.SapModel.LinkObj.SetGroupAssign(objectNm, groupNm)
+            if ret != 0:
+                print("error in "+objectNm)
         else:
             print("error for object "+objectNm)
             

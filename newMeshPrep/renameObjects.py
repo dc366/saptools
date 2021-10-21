@@ -14,7 +14,8 @@ sapBox = attach.sapApplication()
 modelName = sapBox.SapModel.GetModelFilename(False)
 n = len(modelName)-4
 m = n - 7
-prefix = modelName[m:n]  # This is the prefix that will be used to rename the objects
+#prefix = modelName[m:n]  # This is the prefix that will be used to rename the objects
+prefix = 'C3WestTDown'
 
 
 objectNames = attach.sapGroup(sapBox, "All").ObjectName

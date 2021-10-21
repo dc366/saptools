@@ -11,7 +11,7 @@ import attach
 sapBox = attach.sapApplication()
 
 
-filePath = r"C:\Users\ACP\Desktop\2021_04_XX Seq C1 NE\2021_05_12-LERAMOD.xlsx"
+filePath = r"C:\Users\acp\Desktop\2021_09_20 Seq A West\2021_09_27-LERAMODS.xlsx"
 sheetName = "readGroups"
 columnName = "Group"
 groupNames= attach.get_list_excel(filePath, sheetName, columnName) 
