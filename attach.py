@@ -3,21 +3,27 @@ import comtypes.client
 import pandas as pd
 import os.path
 from itertools import compress
-from tqdm import tqdm
+from itertools import chain
 
 class sapApplication:
     def __init__(self,modelname=None,modelpath=None):
-        
         if (modelname and modelpath):
-            self.startSap(modelname,modelpath)
+            self.SapObject = sapApplication.startSap(modelname,modelpath)
+            self.SapModel = self.SapObject.SapModel
         else:
-            self.attachSap()
+            self.SapObject = sapApplication.attachSap()
+            self.SapModel = self.SapObject.SapModel
 
-    def attachSap(self):
+    @staticmethod
+    def attachSap():
+        
+        helper = comtypes.client.CreateObject('SAP2000v1.Helper')
+        helper = helper.QueryInterface(comtypes.gen.SAP2000v1.cHelper)
+        
         try:
             #get the active SapObject
             
-            mySapObject = comtypes.client.GetActiveObject("CSI.SAP2000.API.SapObject")
+            mySapObject = helper.GetObject("CSI.SAP2000.API.SapObject")
             #mySapObject = comtypes.client.GetActiveObject("CSI.ETABS.API.ETABSObject")
             print("attached!")
         
@@ -27,12 +33,11 @@ class sapApplication:
         
             sys.exit(-1)
         
-        self.SapObject = mySapObject
-        self.SapModel = mySapObject.SapModel
         
-        return
+        return mySapObject
     
-    def startSap(self,modelname,modelfolder):        
+    @staticmethod
+    def startSap(modelname,modelfolder):        
         
         #full path to the model
         #set it to the desired path of your model
@@ -66,10 +71,7 @@ class sapApplication:
         mySapObject.ApplicationStart()
         mySapObject.SapModel.File.OpenFile(ModelPath)
         
-        self.SapObject = mySapObject
-        self.SapModel = mySapObject.SapModel
-        
-        return
+        return mySapObject
 
     def closeSapModel(self):
         print (self.SapObject.ApplicationExit(False))
