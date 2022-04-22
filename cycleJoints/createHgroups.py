@@ -4,7 +4,7 @@ from tqdm import tqdm
 sapBox = attach.sapApplication()
 
 """Please input filepath of pythong input spreadsheet:"""
-filePath = r"J:\ENG\1092 LMNA LA\Facade & FRP Analysis Work\ACP\Panel Point Generatior\Seq C1 SE Redo\2021_03_16_C1SERedo_Mapping.xlsx"
+filePath = r"J:\ENG\1092 LMNA LA\Facade & FRP Analysis Work\ACP\Panel Point Generatior\Seq A West\2021_09_23_A_West_Mapping.xlsx"
 
 """Please input Group Name from SAP"""
 grandJointGroup = "panelEdgePoints"
