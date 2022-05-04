@@ -77,6 +77,11 @@ class sapApplication:
         print (self.SapObject.ApplicationExit(False))
         self.SapModel = None
         self.SapObject = None
+        
+    def checkret(self,ret,step):
+        if ret:
+            print("  error at "+step)
+        return 0
     
     def get_list_sap(self,*args):
         
@@ -99,10 +104,8 @@ class sapApplication:
         """
         obj_type_list = [objtype_dict[i] for i in args]
         
-        selectedobjs = self.SapModel.SelectObj.GetSelected()
-        
-        objtype = selectedobjs[1]
-        jointname = selectedobjs[2]
+        _, objtype, jointname, ret = self.SapModel.SelectObj.GetSelected()
+        ret = self.checkret(ret,"get selected items")
         
         
         jointmask = [i in obj_type_list for i in objtype]
@@ -118,16 +121,13 @@ class sapApplication:
         """
         
         ret = self.SapModel.GroupDef.SetGroup(groupname)
+        ret = self.checkret(ret,"get items in group "+groupname)
         #for ETABS
         #ret = SapModel.GroupDef.SetGroup_1(groupname)
-        if ret != 0:
-            print ("error!")
         
         for j in joints:
             ret = self.SapModel.PointObj.SetGroupAssign(str(j),groupname)
-            
-            if ret != 0:
-                print ("error!")
+            ret = self.checkret(ret,"add joint " + j + " in " + groupname)
             
     def add_areas_to_group(self,groupname, areas):
         """
@@ -135,16 +135,13 @@ class sapApplication:
         """
         
         ret = self.SapModel.GroupDef.SetGroup(groupname)
+        ret = self.checkret(ret,"get items in group "+groupname)
         #for ETABS
         #ret = SapModel.GroupDef.SetGroup_1(groupname)
-        if ret != 0:
-            print ("error!")
         
         for j in areas:
             ret = self.SapModel.AreaObj.SetGroupAssign(str(j),groupname)
-            
-            if ret != 0:
-                print ("error!")
+            ret = self.checkret(ret,"add area " + j + " in " + groupname)
     
     def add_frames_to_group(self,groupname,frames):
         """
@@ -152,24 +149,67 @@ class sapApplication:
         """
         
         ret = self.SapModel.GroupDef.SetGroup(groupname)
+        ret = self.checkret(ret,"get items in group "+groupname)
         #for ETABS
         #ret = SapModel.GroupDef.SetGroup_1(groupname)
-        if ret != 0:
-            print ("error!")
         
         for j in frames:
             ret = self.SapModel.FrameObj.SetGroupAssign(str(j),groupname)
+            ret = self.checkret(ret,"add frame " + j + " in " + groupname)
             
-            if ret != 0:
-                print ("error!")
     def select_group(self, groupname):
         ret = self.SapModel.SelectObj.Group(groupname)
-        if ret != 0:
-            print("error!")
+        ret = self.checkret(ret,"select group "+groupname)
+    
     def clear_selection(self):
         ret = self.SapModel.SelectObj.ClearSelection()
-        if ret != 0:
-            print("error!")
+        ret = self.checkret(ret,"clear selection")
+            
+    def get_groups(self, groupnames):
+        """
+        
+
+        Parameters
+        ----------
+        groupnames : string
+            List of group names
+
+        Returns
+        -------
+        group_dict : dictionary of lists
+            Dictionary where group_dict[groupname] = [ObjectType, ObjectName].
+
+        """
+        group_dict = {}
+        for group in groupnames:
+            _, ObjectType, ObjectName, ret = self.SapModel.GroupDef.GetAssignments(group)
+            ret = self.checkret(ret,"get items in group "+group)
+            group_dict[group] = [ObjectType, ObjectName]
+        
+        return group_dict
+    
+    def write_groups(self, group_dict):
+        
+        write_dict = {1:self.SapModel.PointObj.SetGroupAssign, #point
+                      2:self.SapModel.FrameObj.SetGroupAssign, #frame
+                      3:self.SapModel.CableObj.SetGroupAssign, #cable
+                      4:self.SapModel.TendonObj.SetGroupAssign,#tendon
+                      5:self.SapModel.AreaObj.SetGroupAssign,  #area
+                      6:self.SapModel.SolidObj.SetGroupAssign, #solid
+                      7:self.SapModel.LinkObj.SetGroupAssign}  #link
+        
+        for group in group_dict:
+            
+            ret = self.SapModel.GroupDef.SetGroup(group)
+            ret = self.checkret(ret,"add group "+group)
+            
+            ObjectTypes, ObjectNames = group_dict[group]
+            
+            for obj_type, obj_name in zip(ObjectTypes,ObjectNames):
+                ret = write_dict[obj_type](obj_name,group)
+                ret = self.checkret(ret,"add object "+obj_name + " to group " +group)
+                
+        return
             
                 
 class sapGroup:
