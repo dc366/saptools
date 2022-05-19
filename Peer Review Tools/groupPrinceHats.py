@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 
 print("Listing all Objects Names and Type Please wait..")
-frameGroup = attach.sapGroup(a, "GROUPY").ObjectName
+frameGroup = attach.sapGroup(a, "metalStudFrames").ObjectName
 
 
 
