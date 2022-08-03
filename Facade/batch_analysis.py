@@ -10,7 +10,7 @@ import UtilityFuncs as uf
 import os.path
 
 
-parent_folder = r'C:\Users\djc\Desktop\SAP Working\C3 rerun'
+parent_folder = r'C:\Users\djc\Desktop\SAP Working\Single Panel Models\StiffStudies\Run'
 
 folder_list = uf.folders_in_folder(parent_folder)
 
@@ -41,8 +41,8 @@ for folder in folder_list:
         ret = checkret(ret,"set units "+file_name)
 
         #set load cases to run
-        ret = a.SapModel.Analyze.SetRunCaseFlag(None,True,True)
-        ret = checkret(ret,"set all cases to run "+file_name)
+        #ret = a.SapModel.Analyze.SetRunCaseFlag(None,True,True)
+        #ret = checkret(ret,"set all cases to run "+file_name)
     
         #save it to a subfolder
         os.makedirs(folder_path+os.sep+file_name,exist_ok=True)

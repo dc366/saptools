@@ -10,7 +10,7 @@ import UtilityFuncs as uf
 import os.path
 import pandas as pd
 
-folder_path = r'C:\Users\djc\Desktop\SAP Working\Single Panel Models\Studyv2'
+folder_path = r'C:\Users\djc\Desktop\SAP Working\Single Panel Models\StiffStudies\Run\Run'
 folder_list = uf.folders_in_folder(folder_path)
 
 a = attach.sapApplication()

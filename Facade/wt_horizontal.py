@@ -12,8 +12,7 @@ def checkret(ret,step):
         print("  error at "+step)
     return 0
 
-e3_vector_list = [  ["C64-10",[-0.243404,0.041055,0.969056]]
-                    ]
+e3_vector_list = [  ["C11-09",[0.670766,0.162639,0.723617]]]
 
 dead_WT_horiz = "DEAD-WT Horizontal"
 load_case_name = "DEAD: IBP - Horiz"
@@ -43,6 +42,3 @@ ret = a.SapModel.LoadCases.StaticNonlinear.SetCase(load_case_name)
 ret = checkret(ret,"create load case")
 ret = a.SapModel.LoadCases.StaticNonlinear.SetLoads(load_case_name,2,["Load" for x in range(2)],["DEAD",dead_WT_horiz],[1.0,-1.0])
 ret = checkret(ret[-1],"set load case loads")
-
-#save model
-#a.SapModel.
