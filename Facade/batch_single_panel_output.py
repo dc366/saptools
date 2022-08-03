@@ -20,7 +20,7 @@ def checkret(ret,step):
         print("  error at "+step)
     return 0
 
-cases_to_output = ['DEAD',"DEAD-WT Horizontal","DEAD: IBP - Horiz"]
+cases_to_output = ['DEAD',"DEAD-WT Horizontal","DEAD: IBP - Horiz","Bracket Correction IBP","Bracket Correction Horiz"]
 
 for folder in folder_list:
     file_name = folder

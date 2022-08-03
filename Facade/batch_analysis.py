@@ -9,7 +9,7 @@ import attach
 import UtilityFuncs as uf
 import os.path
 
-
+#put models to be run into subfolder inside this folder
 parent_folder = r'C:\Users\djc\Desktop\SAP Working\Single Panel Models\StiffStudies\Run'
 
 folder_list = uf.folders_in_folder(parent_folder)
