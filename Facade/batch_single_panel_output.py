@@ -9,9 +9,11 @@ import attach
 import UtilityFuncs as uf
 import os.path
 import pandas as pd
+from shutil import copyfile
 
 folder_path = r'C:\Users\djc\Desktop\SAP Working\Single Panel Models\StiffStudies\Run\Run'
 folder_list = uf.folders_in_folder(folder_path)
+remote_path = r'J:\ENG\1092 LMNA LA\Facade Peer Review\Panel Scanning Validation\Rhino - Minds Final QAQC\SAP Output'
 
 a = attach.sapApplication()
 
@@ -20,7 +22,7 @@ def checkret(ret,step):
         print("  error at "+step)
     return 0
 
-cases_to_output = ['DEAD',"DEAD-WT Horizontal","DEAD: IBP - Horiz","Bracket Correction IBP","Bracket Correction Horiz"]
+cases_to_output = ['DEAD',"DEAD-WT Horizontal","DEAD: IBP - Horiz","+Thermal15","-Thermal15"]
 
 for folder in folder_list:
     file_name = folder
@@ -123,5 +125,8 @@ for folder in folder_list:
     pd.DataFrame(area_output).to_excel(ew,sheet_name="area output",index=False)
     pd.DataFrame(frame_joint_disp_output).to_excel(ew,sheet_name="joint disp output",index=False)
     ew.save()
+    
+    os.makedirs(remote_path+os.sep+folder,exist_ok=True)
+    copyfile(folder_path+os.sep+folder+os.sep+"output.xlsx",remote_path+os.sep+folder+os.sep+"output.xlsx")
 
     print(file_name + " complete")
