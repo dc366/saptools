@@ -156,6 +156,20 @@ class sapApplication:
         for j in frames:
             ret = self.SapModel.FrameObj.SetGroupAssign(str(j),groupname)
             ret = self.checkret(ret,"add frame " + j + " in " + groupname)
+
+    def add_links_to_group(self,groupname, links):
+        """
+        assign joints in list joints to group groupname. Creates group groupname if it does not exist
+        """
+        
+        ret = self.SapModel.GroupDef.SetGroup(groupname)
+        ret = self.checkret(ret,"get items in group "+groupname)
+        #for ETABS
+        #ret = SapModel.GroupDef.SetGroup_1(groupname)
+        
+        for j in links:
+            ret = self.SapModel.LinkObj.SetGroupAssign(str(j),groupname)
+            ret = self.checkret(ret,"add link " + j + " in " + groupname)
             
     def select_group(self, groupname):
         ret = self.SapModel.SelectObj.Group(groupname)
