@@ -13,9 +13,6 @@ import os
 import sys
 import comtypes.client
 import UtilityFuncs as uf
-
-modelfolder = 'D:\Working\BallHitchPin_TPinsReleased'
-modelname = '210111- Combined_Model_SEQ_B_EAST_V26_ballHitchPin_TPinReleased.sdb'
  
 def startSap():
     #set the following flag to True to attach to an existing instance of the program
@@ -78,10 +75,8 @@ def startSap():
         
         return mySapObject
 
-folder_path = r'D:\Working\P1092\Sequence C2 C3 A\Models'
+folder_path = r'D:\Working\to_fix'
 file_list = uf.files_in_folder(folder_path)
-
-cases_to_run = ["DEAD_withWW"]
 
 mySapObject = startSap()
 SapModel = mySapObject.SapModel
@@ -96,30 +91,18 @@ for file in file_list:
     #open model
     SapModel.File.OpenFile(folder_path+os.sep+file)
     
-    #save it to a subfolder
-    os.makedirs(folder_path+os.sep+file_name,exist_ok=True)
-    SapModel.File.Save(folder_path+os.sep+file_name+os.sep+file)
+    #select all and delete reverseSW on frames
+    SapModel.SelectObj.All()
+    SapModel.FrameObj.DeleteLoadGravity(None,"reverseSW",2)
     
-    #set advanced solver
-    SapModel.Analyze.SetSolverOption_2(1,0,0)
+    #select all and delete reverseSW on areas
+    SapModel.SelectObj.All()
+    SapModel.AreaObj.DeleteLoadGravity(None,"reverseSW",2)    
     
-    #get all load case names
-    [_,load_cases,_,_] = SapModel.Analyze.GetCaseStatus()
+    #add reverseSW to correct group
+    SapModel.FrameObj.SetLoadGravity("LERA_secondary","reverseSW",0,0,1,ItemType=1)
+    SapModel.AreaObj.SetLoadGravity("LERA_secondary","reverseSW",0,0,1,ItemType=1)    
     
-    #turn off all cases
-    SapModel.Analyze.SetRunCaseFlag(None,False,True)
-    
-    #turn on specified load cases
-    for lc in cases_to_run:
-        SapModel.Analyze.SetRunCaseFlag(lc,True)
-    
-    #run analysis
-    ret = SapModel.Analyze.RunAnalysis()
-    if ret:
-        print(f'{file} had an error')
-    else:
-        print(f'{file} ran successfully')
-        
     #save results
     SapModel.File.Save()
 

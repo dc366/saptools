@@ -3,28 +3,21 @@ import comtypes.client
 import pandas as pd
 import os.path
 from itertools import compress
-from itertools import chain
+from tqdm import tqdm
 
 class sapApplication:
     def __init__(self,modelname=None,modelpath=None):
+        
         if (modelname and modelpath):
-            self.SapObject = sapApplication.startSap(modelname,modelpath)
-            self.SapModel = self.SapObject.SapModel
+            self.startSap(modelname,modelpath)
         else:
-            self.SapObject = sapApplication.attachSap()
-            self.SapModel = self.SapObject.SapModel
+            self.attachSap()
 
-    @staticmethod
-    def attachSap():
-        
-        helper = comtypes.client.CreateObject('SAP2000v1.Helper')
-        helper = helper.QueryInterface(comtypes.gen.SAP2000v1.cHelper)
-        
+    def attachSap(self):
         try:
             #get the active SapObject
             
-            mySapObject = helper.GetObject("CSI.SAP2000.API.SapObject")
-            #mySapObject = comtypes.client.GetActiveObject("CSI.ETABS.API.ETABSObject")
+            mySapObject = comtypes.client.GetActiveObject("CSI.ETABS.API.ETABSObject") 
             print("attached!")
         
         except (OSError, comtypes.COMError):
@@ -33,11 +26,12 @@ class sapApplication:
         
             sys.exit(-1)
         
+        self.SapObject = mySapObject
+        self.SapModel = mySapObject.SapModel
         
-        return mySapObject
+        return
     
-    @staticmethod
-    def startSap(modelname,modelfolder):        
+    def startSap(self,modelname,modelfolder):        
         
         #full path to the model
         #set it to the desired path of your model
@@ -71,17 +65,15 @@ class sapApplication:
         mySapObject.ApplicationStart()
         mySapObject.SapModel.File.OpenFile(ModelPath)
         
-        return mySapObject
+        self.SapObject = mySapObject
+        self.SapModel = mySapObject.SapModel
+        
+        return
 
     def closeSapModel(self):
         print (self.SapObject.ApplicationExit(False))
         self.SapModel = None
         self.SapObject = None
-        
-    def checkret(self,ret,step):
-        if ret:
-            print("  error at "+step)
-        return 0
     
     def get_list_sap(self,*args):
         
@@ -104,8 +96,10 @@ class sapApplication:
         """
         obj_type_list = [objtype_dict[i] for i in args]
         
-        _, objtype, jointname, ret = self.SapModel.SelectObj.GetSelected()
-        ret = self.checkret(ret,"get selected items")
+        selectedobjs = self.SapModel.SelectObj.GetSelected()
+        
+        objtype = selectedobjs[1]
+        jointname = selectedobjs[2]
         
         
         jointmask = [i in obj_type_list for i in objtype]
@@ -120,110 +114,59 @@ class sapApplication:
         assign joints in list joints to group groupname. Creates group groupname if it does not exist
         """
         
-        ret = self.SapModel.GroupDef.SetGroup(groupname)
-        ret = self.checkret(ret,"get items in group "+groupname)
+        #ret = self.SapModel.GroupDef.SetGroup(groupname)
         #for ETABS
-        #ret = SapModel.GroupDef.SetGroup_1(groupname)
+        ret = self.SapModel.GroupDef.SetGroup_1(groupname)
+        if ret != 0:
+            print ("error!")
         
         for j in joints:
             ret = self.SapModel.PointObj.SetGroupAssign(str(j),groupname)
-            ret = self.checkret(ret,"add joint " + j + " in " + groupname)
+            
+            if ret != 0:
+                print ("error!")
             
     def add_areas_to_group(self,groupname, areas):
         """
         assign joints in list joints to group groupname. Creates group groupname if it does not exist
         """
         
-        ret = self.SapModel.GroupDef.SetGroup(groupname)
-        ret = self.checkret(ret,"get items in group "+groupname)
+        #ret = self.SapModel.GroupDef.SetGroup(groupname)
         #for ETABS
-        #ret = SapModel.GroupDef.SetGroup_1(groupname)
+        ret = self.SapModel.GroupDef.SetGroup_1(groupname)
+        if ret != 0:
+            print ("error!")
         
         for j in areas:
             ret = self.SapModel.AreaObj.SetGroupAssign(str(j),groupname)
-            ret = self.checkret(ret,"add area " + j + " in " + groupname)
+            
+            if ret != 0:
+                print ("error!")
     
     def add_frames_to_group(self,groupname,frames):
         """
         assign frames in list frames to group groupname. Creates group groupname if it does not exist
         """
         
-        ret = self.SapModel.GroupDef.SetGroup(groupname)
-        ret = self.checkret(ret,"get items in group "+groupname)
+        #ret = self.SapModel.GroupDef.SetGroup(groupname)
         #for ETABS
-        #ret = SapModel.GroupDef.SetGroup_1(groupname)
+        ret = self.SapModel.GroupDef.SetGroup_1(groupname)
+        if ret != 0:
+            print ("error!")
         
         for j in frames:
             ret = self.SapModel.FrameObj.SetGroupAssign(str(j),groupname)
-            ret = self.checkret(ret,"add frame " + j + " in " + groupname)
-
-    def add_links_to_group(self,groupname, links):
-        """
-        assign joints in list joints to group groupname. Creates group groupname if it does not exist
-        """
-        
-        ret = self.SapModel.GroupDef.SetGroup(groupname)
-        ret = self.checkret(ret,"get items in group "+groupname)
-        #for ETABS
-        #ret = SapModel.GroupDef.SetGroup_1(groupname)
-        
-        for j in links:
-            ret = self.SapModel.LinkObj.SetGroupAssign(str(j),groupname)
-            ret = self.checkret(ret,"add link " + j + " in " + groupname)
             
+            if ret != 0:
+                print ("error!")
     def select_group(self, groupname):
         ret = self.SapModel.SelectObj.Group(groupname)
-        ret = self.checkret(ret,"select group "+groupname)
-    
+        if ret != 0:
+            print("error!")
     def clear_selection(self):
         ret = self.SapModel.SelectObj.ClearSelection()
-        ret = self.checkret(ret,"clear selection")
-            
-    def get_groups(self, groupnames):
-        """
-        
-
-        Parameters
-        ----------
-        groupnames : string
-            List of group names
-
-        Returns
-        -------
-        group_dict : dictionary of lists
-            Dictionary where group_dict[groupname] = [ObjectType, ObjectName].
-
-        """
-        group_dict = {}
-        for group in groupnames:
-            _, ObjectType, ObjectName, ret = self.SapModel.GroupDef.GetAssignments(group)
-            ret = self.checkret(ret,"get items in group "+group)
-            group_dict[group] = [ObjectType, ObjectName]
-        
-        return group_dict
-    
-    def write_groups(self, group_dict):
-        
-        write_dict = {1:self.SapModel.PointObj.SetGroupAssign, #point
-                      2:self.SapModel.FrameObj.SetGroupAssign, #frame
-                      3:self.SapModel.CableObj.SetGroupAssign, #cable
-                      4:self.SapModel.TendonObj.SetGroupAssign,#tendon
-                      5:self.SapModel.AreaObj.SetGroupAssign,  #area
-                      6:self.SapModel.SolidObj.SetGroupAssign, #solid
-                      7:self.SapModel.LinkObj.SetGroupAssign}  #link
-        
-        for group in group_dict:
-            
-            ret = self.SapModel.GroupDef.SetGroup(group)
-            ret = self.checkret(ret,"add group "+group)
-            
-            ObjectTypes, ObjectNames = group_dict[group]
-            
-            for obj_type, obj_name in zip(ObjectTypes,ObjectNames):
-                ret = write_dict[obj_type](obj_name,group)
-                ret = self.checkret(ret,"add object "+obj_name + " to group " +group)
-                
-        return
+        if ret != 0:
+            print("error!")
             
                 
 class sapGroup:
@@ -369,6 +312,4 @@ def get_list_excel(filepath,sheetname,header):
     cleanedlist = [x for x in dirtylist if (pd.isnull(x) == False)]
     
     return cleanedlist
-
-
 
