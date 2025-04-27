@@ -1,0 +1,46 @@
+# ACP Notes
+
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Key Concepts](#key-concepts)
+3. [Common Issues](#common-issues)
+4. [Tips and Tricks](#tips-and-tricks)
+5. [References](#references)
+
+---
+
+## Introduction
+Write a brief introduction about the purpose of these notes.
+
+---
+
+## Key Concepts
+- Concept 1: what is "attach_ETABS.py" and what is this api doing?
+
+I used copilot to learn about attach_ETABS class.  Here's what I learned:
+
+The attach script is setting up a new class that has as attributes the ETABS program instance and the model.
+When you call the attach file class by saying a = attach_ETABS.sapApplication() it is setting up a as a new object of this class 
+that is being defined therein.  you can then access the model through the sapModel attribute by doing like a.sapModel...stuff.
+The github copilot was useful for learning about the code in this example.
+
+
+- Concept 2: Description
+
+---
+
+## Common Issues
+1. **Issue 1**: Description and solution.
+2. **Issue 2**: Description and solution.
+
+---
+
+## Tips and Tricks
+- Tip 1: Description
+- Tip 2: Description
+
+---
+
+## References
+- Link or reference 1
+- Link or reference 2
